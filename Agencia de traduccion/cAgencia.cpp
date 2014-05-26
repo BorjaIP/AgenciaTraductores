@@ -44,16 +44,17 @@ void cAgencia::importarFichero(){
     else
     {
         fich>>nEmpleados;
-        while (j<nEmpleados){
+        while (i<nEmpleados){
             fich>>nombre>>nIdiomas;
             if (nIdiomas!=0) {
-                do {
-                    fich>>idiomas[i];
-                    i++;
-                }while (i<nIdiomas);
+                while (j<nIdiomas) {
+                    fich>>idiomas[j];
+                    j++;
+                }
+                j=0;
             }
-            empleados[j]= new cEmpleadoUnico(nombre,nIdiomas,idiomas);
-            j++;
+            empleados[i]= new cEmpleadoUnico(nombre,nIdiomas,idiomas);
+            i++;
         }
     }
     fich.close();
@@ -337,16 +338,19 @@ void cAgencia::despedirEmpleado(){
     while ((!encontrado) && (i<nEmpleados)) {
         if (nombre == empleados[i]->getNombre()) {
             encontrado=true;
-            for (int k=0; k<nEmpleados; k++) {
+            delete empleados[i];
+            for (int k=i; k<nEmpleados-1; k++) {
                 empleados[k]=empleados[k+1];
             }
             nEmpleados--;
         }
-        else
-            cout<<endl<<"El nombre del trabajador que ha introducido no es correcto";
         i++;
     }
-    cout<<endl<<"El empleado "<<empleados[i]->getNombre()<<" ha sido despedido.";
+    if (encontrado) {
+        cout<<endl<<"El empleado "<<empleados[i]->getNombre()<<" ha sido despedido.";
+    }
+    else
+        cout<<endl<<"El nombre del trabajador que ha introducido no es correcto";
 }
 
 void cAgencia::mostrarEmpleado(){
@@ -365,7 +369,7 @@ void cAgencia::mostrarEmpleado(){
         }
 		i++;
     }
-    if(encontrado)
+    if(!encontrado)
         cout<<endl<<"No se ha encontrado ningun empleado con ese nombre."<<endl;
 }
 
